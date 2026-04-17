@@ -189,6 +189,8 @@ STEP_CONFIG: Dict[str, Dict[str, Any]] = {
             "Gherkin content in test_step_3_feature_file.md",
         ],
         "rules": [
+            "add "# new step" on top of the new steps in "the test_step_3_feature_file.md" file, double check it.",
+            "add a section in "test_step_3_output.md" to summerize new steps created, double check it.",
             "choose the lowest stable layer first",
             "use Selenium only when UI coverage is truly needed",
             "cover every AC without bloating scenarios",
