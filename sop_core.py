@@ -66,25 +66,26 @@ h1, h2, h3 {
         unsafe_allow_html=True,
     )
 
-SOP_TITLE = "AI-Enabled Agile Java SDLC Workflow"
+SOP_TITLE = "Daily-Use 6-Step SOP for Java Test Development"
 
 SHARED_CONTEXT = {
-    "team_context": "You are an AI delivery copilot for a SAFe Agile Java engineering team.",
-    "sequence": "Define -> Clarify -> Design -> Build -> Test -> Release",
+    "team_context": "You are supporting a QA automation team delivering website solutions in a safe agile environment.",
+    "sequence": "Clarify -> Define -> Map -> Plan -> Build -> Close",
     "stack": "This SOP supports a test stack based on Java, Cucumber, TestNG, Selenium, and Xray.",
 }
 
 DEFAULT_RULES = [
-    "Do not invent facts.",
-    "Use only provided input and prior step outputs.",
-    "Keep outputs concise, practical, and reviewable.",
-    "Use AI for drafting and analysis; final decisions stay with the team.",
-    "Follow provided standards, file formats, and engineering principles.",
-    "If input, assumptions, or 3-Amigo alignment is missing, call it out clearly.",
-    "Reuse existing framework assets and patterns when possible.",
-    "Do not fix unrelated existing issues unless they are simple, safe, and directly helpful to the requested change.",
-    "Highlight placeholders, fake/sample values, hard-coded usernames/passwords, URLs, IDs, names, links, and similar items in the summary whenever found.",
-    "No secrets or sensitive production data.",
+    "use the latest referenced .md file as the source of truth",
+    "after each step, the user may review and revise the generated .md file",
+    "each next step must use the latest reviewed .md file as the source of truth",
+    "if a reviewed file changes direction, refresh affected downstream steps before continuing",
+    "reuse existing assets first",
+    "prefer lower stable coverage before Selenium UI coverage when valid",
+    "do not invent missing facts",
+    "do not fix unrelated existing issues unless they directly impact the current issue, current test coverage, or current execution",
+    "do not use Thread.Sleep() or similar hard waits",
+    "use 3 amigos only when requirements, scope, or expected behavior are unclear",
+    "when temporary, fake, sample, placeholder, stubbed, mocked, hardcoded, skipped, or bypassed items are found, record them under a dedicated ## Temporary, Placeholder, or Risky Items section in the generated .md output when relevant",
 ]
 
 MARKDOWN_STYLE = [
@@ -107,238 +108,182 @@ COMMON_INPUT_PLACEHOLDERS = [
 
 STEP_CONFIG: Dict[str, Dict[str, Any]] = {
     "step_0": {
-        "name": "Master Prompt",
-        "role": "AI delivery copilot for a SAFe Agile Java engineering team",
-        "task": "Support only the requested step and keep outputs aligned across Define, Clarify, Design, Build, Test, and Release.",
+        "name": "Shared Context",
+        "role": "SOP Coordinator",
+        "task": "Provide the baseline context and reusable references for all downstream steps.",
         "inputs": [
-            "[project/system name]",
-            "[business domain/feature area]",
-            "[application type]",
-            "[tech stack]",
-            "[repo/module context if known]",
-            "[team conventions, coding standards, architecture rules, or tech deck]",
+            "additional shared context notes",
         ],
         "outputs": [
-            "Baseline context and rules for all downstream steps",
+            "Shared context package used by later steps",
         ],
         "rules": [
-            "Do not invent facts.",
-            "Use only provided input and prior step outputs.",
-            "Keep outputs concise, practical, and reviewable.",
-            "Use AI for drafting and analysis; final decisions stay with the team.",
-            "Follow provided standards, file formats, and engineering principles.",
-            "If input, assumptions, or 3-Amigo alignment is missing, call it out clearly.",
-            "Reuse existing framework assets and patterns when possible.",
-            "Do not fix unrelated existing issues unless they are simple, safe, and directly helpful to the requested change.",
-            "Highlight placeholders, fake/sample values, hard-coded usernames/passwords, URLs, IDs, names, links, and similar items in the summary whenever found.",
-            "No secrets or sensitive production data.",
+            "Do not generate implementation output in Step 0.",
         ],
         "save_to": "(no required output file)",
     },
     "step_1": {
-        "name": "Define",
-        "role": "Senior Agile Java engineering lead",
-        "task": "Turn the raw request into a sprint-ready Jira item.",
+        "name": "Clarify",
+        "role": "Senior Test Analyst",
+        "task": "Turn raw story and discussion input into a clear test-ready summary.",
         "inputs": [
-            "[story]",
-            "[bug]",
-            "[notes]",
-            "[logs]",
-            "[screenshots text]",
-            "[business context]",
-        ],
-        "optional_inputs": [
-            "[related ticket IDs]",
-            "[business priority]",
-            "[known impacted systems/modules]",
-            "[deadline or target release]",
-            "[3-Amigo notes]",
-            "[reviewer notes]",
+            "Jira / AC / notes",
+            "logs / errors / screenshots text",
+            "expected behavior",
+            "actual behavior",
+            "impacted area",
+            "known existing coverage or reuse",
+            "3 amigos notes if available",
         ],
         "outputs": [
-            "Title, Business goal, Problem statement",
-            "Scope, Out of scope",
-            "Assumptions, Risks",
-            "Impacted systems/modules",
-            "Priority or severity recommendation",
-            "Open questions for grooming",
-            "Definition of Ready checklist",
+            "business objective",
+            "scope / out of scope",
+            "assumptions / open questions",
+            "impacted areas / dependencies / risks",
+            "reuse candidates",
+            "recommended test approach",
         ],
         "rules": [
-            "Do not invent facts.",
-            "Keep it concise.",
-            "Reflect 3-Amigo outcomes when available.",
-            "If input or alignment is weak, list the gaps clearly.",
-            "Preserve traceability to the original story or request.",
-            "Use the Step 0 markdown style.",
+            "facts first",
+            "improve clarity, not meaning",
+            "preserve confirmed 3-amigos decisions",
+            "if business behavior or scope is unclear, recommend 3 amigos follow-up",
         ],
-        "save_to": "dev_step_1_output.md",
+        "save_to": "test_step_1_output.md",
     },
     "step_2": {
-        "name": "Clarify",
-        "role": "Senior QA analyst",
-        "task": "Turn Step 1 into clear, test-ready requirements and acceptance criteria.",
-        "inputs": "dev_step_1_output.md",
-        "optional_inputs": [
-            "[reviewer corrections]",
-            "[business clarifications]",
-            "[policy/compliance constraints]",
-            "[user roles/personas]",
-            "[known edge cases]",
-            "[3-Amigo decisions or open items]",
-        ],
+        "name": "Define",
+        "role": "Test Architect",
+        "task": "Turn Step 1 output into clear acceptance criteria and test conditions.",
+        "inputs": "test_step_1_output.md",
         "outputs": [
-            "Functional requirements, Non-functional requirements",
-            "Business rules",
-            "Success scenarios, Failure scenarios",
-            "Edge cases",
-            "Acceptance criteria labeled AC1, AC2, AC3...",
-            "Draft Definition of Done",
+            "acceptance criteria",
+            "positive / negative / edge scenarios",
+            "regression / accessibility / content checks",
+            "automation vs manual recommendation",
+            "deferred / out-of-scope items",
         ],
         "rules": [
-            "No code.",
-            "No implementation details.",
-            "Make each acceptance criterion observable and testable.",
-            "Call out any Product/PO, Dev, and QA/Test misalignment clearly.",
-            "Include relevant non-functional requirements.",
-            "Preserve traceability back to the story and acceptance criteria.",
-            "Use the Step 0 markdown style.",
+            "observable outcomes only",
+            "no implementation details",
+            "no code",
+            "if ACs cannot be made testable from available facts, recommend 3 amigos follow-up",
         ],
-        "save_to": "dev_step_2_output.md",
+        "save_to": "test_step_2_output.md",
     },
     "step_3": {
-        "name": "Design",
-        "role": "Senior Java software architect",
-        "task": "Turn Step 2 into a practical Java solution design and sprint task plan.",
-        "inputs": "dev_step_2_output.md",
+        "name": "Map",
+        "role": "Senior Test Automation Architect",
+        "task": "Map coverage across the current stack: Java, Cucumber, TestNG, Selenium, and Xray.",
+        "inputs":"test_step_2_output.md",
         "optional_inputs": [
-            "[repo/package structure]",
-            "[architecture patterns]",
-            "[integration details]",
-            "[API/schema constraints]",
-            "[non-functional priorities]",
-            "[tech deck or engineering principles]",
-            "[reviewer corrections]",
+            "existing files / classes / methods to reuse",
+            "target file path or package if known",
+            "sample gherkin content",
         ],
         "outputs": [
-            "Architecture overview",
-            "Impacted layers: controller, service, repository, domain/model, integrations",
-            "API, schema, or contract changes",
-            "Validation and exception handling approach",
-            "Logging and observability approach",
-            "Backward compatibility and rollback considerations",
-            "Implementation plan",
-            "Sprint task breakdown in order",
-            "Expected files/modules to change",
-            "Technical risks and dependencies",
+            "layer strategy",
+            "AC-to-test-layer mapping",
+            "manual vs automated split",
+            "reuse candidates",
+            "impacted assets",
+            "risks and gaps",
+            "Gherkin content in test_step_3_feature_file.md",
         ],
         "rules": [
-            "Java-oriented design.",
-            "Do not generate full code.",
-            "Keep it practical and low-risk.",
-            "Reuse existing patterns and framework assets where possible.",
-            "Preserve traceability to requirements and acceptance criteria.",
-            "Use the Step 0 markdown style.",
+            f"add \"# new step\" on top of the new steps in \"the test_step_3_feature_file.md\" file, double check it.",
+            "add a section in \"test_step_3_output.md\" to summerize new steps created, double check it.",
+            "choose the lowest stable layer first",
+            "use Selenium only when UI coverage is truly needed",
+            "cover every AC without bloating scenarios",
+            "name reuse options before suggesting new assets",
         ],
         "save_to": "test_step_3_output.md",
     },
     "step_4": {
-        "name": "Build",
-        "role": "Senior Java developer",
-        "task": "Turn Step 3 into implementation-ready code output.",
-        "inputs": "dev_step_3_output.md",
+        "name": "Plan",
+        "role": "Senior Test Automation Lead",
+        "task": "Plan the minimum framework changes needed to implement Step 3.",
+        "inputs": [
+            "test_step_3_output.md",
+            "test_step_3_feature_file.md"
+        ],
         "optional_inputs": [
-            "[repo structure/module paths]",
-            "[existing class names/file paths]",
-            "[framework/library constraints]",
-            "[coding standards]",
-            "[special file formats or implementation principles]",
-            "[branch naming conventions]",
-            "[reviewer corrections]",
+            "target classes / methods / file paths if known",
         ],
         "outputs": [
-            "Code changes for affected layers",
-            "Validation, exception handling, and logging updates",
-            "Required config changes",
-            "Branch name, commit message, and PR title suggestions",
-            "Review-needed hard-coded or placeholder items",
+            "implementation scope",
+            "classes and methods to update",
+            "file paths / package paths",
+            "test data updates",
+            "hook / runner / config updates",
+            "reuse plan",
+            "local / grid impact",
+            "Xray update needs",
+            "risks or blockers",
         ],
         "rules": [
-            "No unnecessary refactoring.",
-            "Keep code readable and production-oriented.",
-            "Identify each code block with file path.",
-            "Do not skip key imports or helper methods.",
-            "Reuse existing framework components and patterns first.",
-            "Do not fix unrelated existing issues unless they are simple, safe, and directly helpful to the requested change.",
-            "Clearly summarize any fake, sample, placeholder, or hard-coded values found in the code output.",
-            "Stay within scope.",
-            "Use the Step 0 markdown style.",
+            "no Gherkin work in this step",
+            "no full Java code yet",
+            "extend existing assets first",
+            "keep changes minimal and parallel-safe",
         ],
-        "save_to": "dev_step_4_output.md",
+        "save_to": "test_step_4_output.md",
     },
     "step_5": {
-        "name": "Test",
-        "role": "Senior Java QA automation engineer",
-        "task": "Turn Step 4 into test assets and a validation plan.",
-        "inputs": "dev_step_4_output.md",
+        "name": "Build",
+        "role": "Senior Test Automation Engineer",
+        "task": "Implement the minimum approved automation changes from Step 4.",
+        "inputs": "test_step_4_output.md",
         "optional_inputs": [
-            "[repo-specific usage or deviations from Java/Cucumber/TestNG/Selenium/Xray stack]",
-            "[test folder structure]",
-            "[parallel execution constraints]",
-            "[environment or test data constraints]",
-            "[known flaky areas]",
-            "[test design principles or tech deck]",
-            "[reviewer corrections]",
+            "exact files / methods / data / logs if known",
         ],
         "outputs": [
-            "Unit and API/integration test cases",
-            "UI tests only if needed; Gherkin only if explicitly requested",
-            "Test data examples and regression impact",
-            "Quality risks, quality gates, and execution checklist",
+            "feature file updates if approved and required",
+            "code changes",
+            "files changed",
+            "methods changed",
+            "local / grid execution commands",
+            "validation results",
+            "Temporary, Placeholder, or Risky Items",
+            "deferred items",
         ],
         "rules": [
-            "Prefer unit and API coverage over UI.",
-            "No Thread.sleep.",
-            "Support parallel execution where applicable.",
-            "Keep tests stable, maintainable, and parallel-safe.",
-            "Use approved or masked test data only.",
-            "Include file path suggestions.",
-            "Preserve traceability to acceptance criteria and Xray evidence.",
-            "Use the Step 0 markdown style.",
+            "modify existing assets first",
+            "no unrelated refactoring or unrelated bug fixing",
+            "verify local and grid when required",
+            "separate implemented work from follow-up recommendations",
         ],
-        "save_to": "dev_step_5_output.md",
+        "save_to": "test_step_5_output.md",
     },
     "step_6": {
-        "name": "Release",
-        "role": "Senior engineering manager and release reviewer",
-        "task": "Turn Step 5 into a final PR and sprint-closure package.",
-        "inputs": "dev_step_5_output.md",
+        "name": "Close",
+        "role": "Test Lead",
+        "task": "Create the closure report using the defined test baseline, implementation results, and execution evidence.",
+        "inputs": [
+            "test_step_2_output.md",
+            "test_step_5_output.md",
+        ],
         "optional_inputs": [
-            "[deployment environment]",
-            "[release process notes]",
-            "[monitoring/alerting tools]",
-            "[rollback expectations]",
-            "[Jira/Xray closure format]",
-            "[reviewer corrections]",
+            "execution results / logs / screenshots / CI summary / Xray updates",
         ],
         "outputs": [
-            "PR and release summary",
-            "Business value and key technical changes",
-            "Test/acceptance coverage and release evidence",
-            "Risks, deployment/rollback notes, and validation checks",
-            "Reviewer checklist, closure comment, and demo summary",
-            "Outstanding hard-coded or placeholder items",
+            "AC validation",
+            "automated / manual coverage summary",
+            "execution status",
+            "Xray traceability",
+            "Temporary, Placeholder, or Risky Items",
+            "risks / gaps / deferred items",
+            "release recommendation",
+            "Jira-ready closure comment",
         ],
         "rules": [
-            "Be concise but complete.",
-            "Focus on release readiness.",
-            "Separate confirmed facts from risks or follow-up items.",
-            "Include release evidence and traceability to tests/Xray where applicable.",
-            "Identify rollback and validation ownership when relevant.",
-            "Carry forward and summarize any placeholder or hard-coded items that still need review.",
-            "Use the Step 0 markdown style.",
+            "evidence only",
+            "separate confirmed results from assumptions",
+            "distinguish product issues from flaky or environment issues",
+            "do not overstate completion",
         ],
-        "save_to": "dev_step_6_output.md",
+        "save_to": "test_step_6_output.md",
     },
 }
 
@@ -354,7 +299,7 @@ def default_field_value(field: str) -> str:
 
 def is_required_md_field(field: str) -> bool:
     normalized = field.strip()
-    return bool(re.fullmatch(r"dev_step_[1-6]_(output|feature_file)\.md", normalized))
+    return bool(re.fullmatch(r"test_step_[1-6]_(output|feature_file)\.md", normalized))
 
 
 def get_effective_field_value(step_key: str, field: str) -> str:
@@ -460,20 +405,7 @@ def render_step_form(step_key: str) -> None:
     step_inputs = get_step_inputs(step_key)
     step_optional_inputs = get_step_optional_inputs(step_key)
 
-    # Special handling for step_0: render inputs as editable fields
-    if step_key == "step_0":
-        if step_inputs:
-            st.markdown("### Input")
-            st.caption("Provide values for each context item.")
-            for field in step_inputs:
-                _render_field(step_key, field, required=False)
-
-        if step_optional_inputs:
-            st.markdown("### Additional Context")
-            st.caption("Optional — leave blank to omit from the generated prompt.")
-            for field in step_optional_inputs:
-                _render_field(step_key, field, required=False)
-    elif uses_fixed_input_mode(step_key):
+    if uses_fixed_input_mode(step_key):
         if step_inputs:
             st.markdown("### Input")
             st.caption("Fixed step inputs")
@@ -543,19 +475,6 @@ def build_step_0_prompt() -> str:
     for item in MARKDOWN_STYLE:
         lines.append(f"- {item}")
     lines.append("")
-
-    # Read step_0 inputs
-    step_inputs = get_step_inputs("step_0")
-    if step_inputs:
-        lines.append("Input context")
-        lines.append("")
-        for field in step_inputs:
-            value = get_effective_field_value("step_0", field)
-            if value:
-                lines.append(f"- {field}: {value}")
-            else:
-                lines.append(f"- {field}")
-        lines.append("")
 
     lines.append("Common input placeholders")
     lines.append("")

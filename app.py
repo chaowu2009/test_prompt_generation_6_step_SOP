@@ -2,12 +2,12 @@ import streamlit as st
 
 from sop_core import STEP_CONFIG, apply_global_styles, ensure_state
 
-st.set_page_config(page_title="AI-Enabled Agile Java SDLC Workflow", layout="wide")
+st.set_page_config(page_title="Java Test Framework SOP", layout="wide")
 
 apply_global_styles()
 ensure_state()
 
-st.title("AI-Enabled Agile Java SDLC Workflow Prompt Generator")
+st.title("Java Test Framework SOP Prompt Generator")
 st.caption("Use the left Pages menu to open step_0 through step_6. No dropdown is used.")
 
 st.markdown("### Overall Progress")
