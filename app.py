@@ -2,7 +2,7 @@ import streamlit as st
 
 from sop_core import STEP_CONFIG, apply_global_styles, ensure_state
 
-st.set_page_config(page_title="Java Test Framework SOP", layout="wide")
+st.set_page_config(page_title="AI Enabled Java Test Framework SOP", layout="wide")
 
 apply_global_styles()
 ensure_state()
