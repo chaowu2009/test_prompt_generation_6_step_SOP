@@ -250,7 +250,6 @@ STEP_CONFIG: Dict[str, Dict[str, Any]] = {
             "classes and methods to update",
             "file paths / package paths",
             "test data updates",
-            "hook / runner / config updates",
             "reuse plan",
             "local / grid impact",
             "Xray update needs",
@@ -354,7 +353,7 @@ def render_rich_text_line(text: str, prefix: str = "") -> None:
 
 def is_required_md_field(field: str) -> bool:
     normalized = field.strip()
-    return bool(re.fullmatch(r"test_step_[1-6]_(output|feature_file)\.md", normalized))
+    return bool(re.fullmatch(r"test_step_[1-6]_(output|feature_file)\.md|test_step_[1-6]_gherkin\.feature", normalized))
 
 
 def get_effective_field_value(step_key: str, field: str) -> str:
