@@ -287,6 +287,7 @@ STEP_CONFIG: Dict[str, Dict[str, Any]] = {
             "deferred items",
         ],
         "rules": [
+            "Never create a file unless it contains complete, functional content. Do not create placeholder classes, stub methods with only a TODO body, empty config files, or empty directories. If a file cannot be fully implemented in the current step, skip it and note it as pending instead.",
             "modify existing assets first",
             "no unrelated refactoring or unrelated bug fixing",
             "verify local and grid when required",
